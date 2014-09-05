@@ -6,7 +6,7 @@
 
 vector *vec_new(size_t bs)
 {
-   vector *v = malloc(sizeof(*v));
+   vector *v = malloc(sizeof *v);
    if(!v) perror("Failed to allocate initial vector");
 
    v->cap = 0;
@@ -23,7 +23,7 @@ void vec_push(vector *v, void *data)
       if(v->cap == 0 || v->cap%8 != 0) v->cap += (8-v->cap%8);
       else v->cap *= 2;
 
-      v = realloc(v, sizeof(*v) + v->cap*v->bs);
+      v = realloc(v, sizeof *v + v->cap*v->bs);
       if(!v) perror("Failed to expand vector memory");
       memset(v->data + v->len*v->bs, 0, (v->cap-v->len)*v->bs);
    }
@@ -57,7 +57,7 @@ void vec_shrink(vector *v, size_t newlen)
    memset(v->data + newlen*v->bs, 0, (v->len-newlen)*v->bs);
 
    v->cap = v->len = newlen;
-   v = realloc(v, sizeof(*v) + v->cap*v->bs);
+   v = realloc(v, sizeof *v + v->cap*v->bs);
    if(!v) perror("Failed to shrink vector");
 }
 
