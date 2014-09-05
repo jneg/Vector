@@ -6,7 +6,7 @@
 
 vector *vec_new(size_t bs)
 {
-    if(bs < 0 || bs > 8) {
+    if(bs > 8) {
         perror("New: Invalid byte length");
         exit(EXIT_FAILURE);
     }
@@ -63,7 +63,7 @@ void vec_pop(vector *v)
     }
 
     if(v->len == 0) {
-        perror("Pop: length already zero")
+        perror("Pop: length already zero");
         return;
     }
 
@@ -82,7 +82,7 @@ void vec_insert(vector *v, size_t index, void *data)
         return;
     }
 
-    if(index < 0 || index >= v->len) {
+    if(index >= v->len) {
         perror("Insert: index invalid");
         return;
     }
@@ -97,8 +97,8 @@ void vec_erase(vector *v, size_t index)
         return;
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Erase: index invalid")
+    if(index >= v->len) {
+        perror("Erase: index invalid");
         return;
     }
 
@@ -112,7 +112,7 @@ void vec_shrink(vector *v, size_t newlen)
         return;
     }
 
-    if(newlen < 0 || newlen >=v->len) {
+    if(newlen >=v->len) {
         perror("Shrink: new length invalid");
         return;
     }
@@ -134,8 +134,8 @@ char vec_char(vector *v, size_t index)
         return '?';
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Char: index invalid")
+    if(index >= v->len) {
+        perror("Char: index invalid");
         return '?';
     }
 
@@ -149,8 +149,8 @@ short vec_short(vector *v, size_t index)
         return -1;
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Short: index invalid")
+    if(index >= v->len) {
+        perror("Short: index invalid");
         return -1;
     }
 
@@ -164,8 +164,8 @@ int vec_int(vector *v, size_t index)
         return -1;
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Int: index invalid")
+    if(index >= v->len) {
+        perror("Int: index invalid");
         return -1;
     }
 
@@ -179,8 +179,8 @@ long vec_long(vector *v, size_t index)
         return -1;
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Long: index invalid")
+    if(index >= v->len) {
+        perror("Long: index invalid");
         return -1;
     }
 
@@ -194,8 +194,8 @@ double vec_double(vector *v, size_t index)
         return -1.0;
     }
 
-    if(index < 0 || index >= v->len) {
-        perror("Double: index invalid")
+    if(index >= v->len) {
+        perror("Double: index invalid");
         return -1.0;
     }
 
