@@ -128,19 +128,18 @@ VEC_ERR vec_del(vector **v)
 
 void vec_error(VEC_ERR state)
 {
-    if(state == VEC_SUCCESS) {
+    if(state == VEC_SUCCESS)
         puts("Success");
-    } else if(state == VEC_MALLOC) {
+    else if(state == VEC_MALLOC)
         puts("Vector Error: malloc unsuccessful");
-    } else if(state == VEC_REALLOC) {
+    else if(state == VEC_REALLOC)
         puts("Vector Error: realloc unsuccessful");
-    } else if(state == VEC_NULL) {
+    else if(state == VEC_NULL)
         puts("Vector Error: vector passed in was null");
-    } else if(state == VEC_DATA) {
+    else if(state == VEC_DATA)
         puts("Vector Error: data passed in was null");
-    } else if(state == VEC_INDEX) {
+    else if(state == VEC_INDEX)
         puts("Vector Error: index out of bounds");
-    } else {
+    else
         puts("State invalid");
-    }
 }
