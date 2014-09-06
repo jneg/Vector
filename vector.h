@@ -2,7 +2,6 @@
 #define VECTOR_H
 
 typedef struct Vector vector;
-typedef enum Vector_errors VEC_ERR;
 
 enum Vector_errors
 {
