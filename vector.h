@@ -1,3 +1,6 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 typedef struct Vector vector;
 typedef enum Vector_errors VEC_ERR;
 
@@ -26,3 +29,5 @@ extern VEC_ERR vec_shrink(vector *v, size_t newlen);
 extern VEC_ERR vec_get(vector *v, size_t index, void *get);
 extern VEC_ERR vec_delete(vector **v);
 extern void vec_error(VEC_ERR error);
+
+#endif
