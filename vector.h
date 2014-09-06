@@ -1,20 +1,28 @@
 typedef struct Vector vector;
+typedef enum Vector_errors VEC_ERR;
+
+enum Vector_errors
+{
+    VEC_SUCCESS,
+    VEC_MALLOC,
+    VEC_REALLOC,
+    VEC_NULL,
+    VEC_DATA,
+    VEC_INDEX
+};
 
 struct Vector
 {
-   size_t cap, len, bs;
-   char data[];
+    size_t cap, len, bs;
+    char data[];
 };
 
-extern vector *vec_new(size_t bs);
-extern void vec_push(vector *v, void *data);
-extern void vec_pop(vector *v);
-extern void vec_insert(vector *v, size_t index, void *data);
-extern void vec_erase(vector *v, size_t index);
-extern void vec_shrink(vector *v, size_t newlen);
-extern char vec_char(vector *v, size_t index);
-extern short vec_short(vector *v, size_t index);
-extern int vec_int(vector *v, size_t index);
-extern long vec_long(vector *v, size_t index);
-extern double vec_double(vector *v, size_t index);
-extern void vec_del(vector **v);
+extern VEC_ERR vec_new(vector **v, size_t bs);
+extern VEC_ERR vec_push(vector *v, void *data);
+extern VEC_ERR vec_pop(vector *v);
+extern VEC_ERR vec_insert(vector *v, size_t index, void *data);
+extern VEC_ERR vec_erase(vector *v, size_t index);
+extern VEC_ERR vec_shrink(vector *v, size_t newlen);
+extern VEC_ERR vec_get(vector *v, size_t index, void *get);
+extern VEC_ERR vec_delete(vector **v);
+extern void vec_error(VEC_ERR error);
