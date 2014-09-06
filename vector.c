@@ -6,6 +6,9 @@
 
 VEC_ERR vec_new(vector **v, size_t bs)
 {
+    if(!v)
+        return VEC_NULL;
+
     *v = malloc(sizeof **v);
     if(!*v)
         return VEC_NULL;
@@ -107,8 +110,12 @@ VEC_ERR vec_get(vector *v, size_t index, void *get)
     if(!v)
         return VEC_NULL;
 
+    if(!get)
+        return VEC_DATA;
+
     if(index >= v->len)
         return VEC_INDEX;
+
 
     memcpy(get, v->data + index*v->bs, v->bs);
     
