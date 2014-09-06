@@ -4,14 +4,12 @@
 
 #include "vector.h"
 
-VEC_ERR vec_new(vector **v, size_t bs)
+// mallocs vector and sets default values
+int vec_new(vector **v, size_t bs)
 {
-    if(!v)
-        return VEC_NULL;
-
     *v = malloc(sizeof **v);
     if(!*v)
-        return VEC_NULL;
+        return VEC_MALLOC;
 
     (*v)->len = (*v)->cap = 0;
     (*v)->bs = bs;
@@ -19,14 +17,9 @@ VEC_ERR vec_new(vector **v, size_t bs)
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_push(vector *v, void *data)
+// adds element to end and allocates memory if necessary
+int vec_push(vector *v, void *data)
 {
-    if(!v)
-        return VEC_NULL;
-    
-    if(!data)
-        return VEC_DATA;
-
     if(v->cap == 0 || v->cap%8 != 0 || v->cap == v->len) {
         if(v->cap == 0 || v->cap%8 != 0)
             v->cap += (8-v->cap%8);
@@ -36,36 +29,27 @@ VEC_ERR vec_push(vector *v, void *data)
         v = realloc(v, sizeof *v + v->cap*v->bs);
         if(!v)
             return VEC_REALLOC;
-
-        memset(v->data + v->len*v->bs, 0, (v->cap-v->len)*v->bs);
     }
 
-    memcpy(v->data + v->len++ * v->bs, data, v->bs);
+    memcpy(v->data + v->len++*v->bs, data, v->bs);
 
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_pop(vector *v)
+// removes end element
+int vec_pop(vector *v)
 {
-    if(!v)
-        return VEC_NULL;
-
     if(v->len == 0)
         return VEC_INDEX;
 
-    memset(v->data + --v->len*v->bs, 0, v->bs);
+    --v->len;
 
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_insert(vector *v, size_t index, void *data)
+// overwrites element at index with data
+int vec_insert(vector *v, size_t index, void *data)
 { 
-    if(!v)
-        return VEC_NULL;
-
-    if(!data)
-        return VEC_DATA;
-
     if(index >= v->len)
         return VEC_INDEX;
 
@@ -74,28 +58,22 @@ VEC_ERR vec_insert(vector *v, size_t index, void *data)
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_erase(vector *v, size_t index)
+// removes element by shifting right elements on top of it
+int vec_erase(vector *v, size_t index)
 {
-    if(!v)
-        return VEC_NULL;
-
     if(index >= v->len)
         return VEC_INDEX;
 
-    memset(v->data + index*v->bs, 0, v->bs);
+    memcpy(v->data + index*v->bs, v->data + (index + 1)*v->bs, (--v->len - index)*v->bs);
     
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_shrink(vector *v, size_t newlen)
+// deallocates memory until new length
+int vec_shrink(vector *v, size_t newlen)
 {
-    if(!v)
-        return VEC_NULL;
-
     if(newlen >= v->len)
         return VEC_INDEX;
-
-    memset(v->data + newlen*v->bs, 0, (v->len-newlen)*v->bs);
 
     v->cap = v->len = newlen;
     v = realloc(v, sizeof *v + v->cap*v->bs);
@@ -105,48 +83,49 @@ VEC_ERR vec_shrink(vector *v, size_t newlen)
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_get(vector *v, size_t index, void *get)
+// copies element at index into get
+int vec_get(vector *v, size_t index, void *get)
 {
-    if(!v)
-        return VEC_NULL;
-
-    if(!get)
-        return VEC_DATA;
-
     if(index >= v->len)
         return VEC_INDEX;
-
 
     memcpy(get, v->data + index*v->bs, v->bs);
     
     return VEC_SUCCESS;
 }
 
-VEC_ERR vec_del(vector **v)
+// returns iterator to the first element
+void *vec_begin(vector *v)
 {
-    if(!*v)
-        return VEC_NULL;
+    return v->data;
+}
 
+// returns iterator to the end of last element
+void *vec_end(vector *v)
+{
+    return v->data + v->len*v->bs;
+}
+
+// frees vector
+int vec_delete(vector **v)
+{
     free(*v);
     *v = NULL;
     
     return VEC_SUCCESS;
 }
 
-void vec_error(VEC_ERR state)
+// returns a string of the error code
+const char *vec_error(int state)
 {
     if(state == VEC_SUCCESS)
-        puts("Success");
+        return "Success";
     else if(state == VEC_MALLOC)
-        puts("Vector Error: malloc unsuccessful");
+        return "Vector Error: malloc unsuccessful";
     else if(state == VEC_REALLOC)
-        puts("Vector Error: realloc unsuccessful");
-    else if(state == VEC_NULL)
-        puts("Vector Error: vector passed in was null");
-    else if(state == VEC_DATA)
-        puts("Vector Error: data passed in was null");
+        return "Vector Error: realloc unsuccessful";
     else if(state == VEC_INDEX)
-        puts("Vector Error: index out of bounds");
+        return "Vector Error: index out of bounds";
     else
-        puts("State invalid");
+        return "State invalid";
 }
