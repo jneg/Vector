@@ -7,12 +7,12 @@
 // Note: I do not check for null pointers,
 // check for them yourself
 
-// Note: iterate through the whole vector using
+// Note: iterate through the whole struct vector using
 // for(it = vec_begin(v); it != vec_end(v); ++it)
 // where "it" is a pointer to the correct type
 
 // allocates more memory if necessary
-static int vec_alloc(vector **v)
+static int vec_alloc(struct vector **v)
 {
     if((*v)->cap < 16 || (*v)->cap == (*v)->len) {
         if((*v)->cap < 16)
@@ -28,8 +28,8 @@ static int vec_alloc(vector **v)
     return VEC_SUCCESS;
 }
 
-// mallocs vector and sets default values
-int vec_new(vector **v, size_t bs)
+// mallocs struct vector and sets default values
+int vec_new(struct vector **v, size_t bs)
 {
     *v = malloc(sizeof **v);
     if(!*v)
@@ -42,7 +42,7 @@ int vec_new(vector **v, size_t bs)
 }
 
 // adds element to end and allocates memory if necessary
-int vec_push(vector **v, void *data)
+int vec_push(struct vector **v, void *data)
 {
     if(vec_alloc(v) == VEC_REALLOC)
         return VEC_REALLOC;
@@ -53,7 +53,7 @@ int vec_push(vector **v, void *data)
 }
 
 // removes last element
-int vec_pop(vector **v)
+int vec_pop(struct vector **v)
 {
     if((*v)->len == 0)
         return VEC_INDEX;
@@ -64,7 +64,7 @@ int vec_pop(vector **v)
 }
 
 // overwrites element at index with data
-int vec_replace(vector **v, size_t index, void *data)
+int vec_replace(struct vector **v, size_t index, void *data)
 { 
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -75,7 +75,7 @@ int vec_replace(vector **v, size_t index, void *data)
 }
 
 // shifts right elements and overwrites element at index
-int vec_insert(vector **v, size_t index, void *data)
+int vec_insert(struct vector **v, size_t index, void *data)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -90,7 +90,7 @@ int vec_insert(vector **v, size_t index, void *data)
 }
 
 // removes element by shifting right elements on top of it
-int vec_remove(vector **v, size_t index)
+int vec_remove(struct vector **v, size_t index)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -101,7 +101,7 @@ int vec_remove(vector **v, size_t index)
 }
 
 // deallocates memory until new length
-int vec_shrink(vector **v, size_t newlen)
+int vec_shrink(struct vector **v, size_t newlen)
 {
     if(newlen >= (*v)->len)
         return VEC_INDEX;
@@ -115,7 +115,7 @@ int vec_shrink(vector **v, size_t newlen)
 }
 
 // copies element at index into get
-int vec_get(vector **v, size_t index, void *get)
+int vec_get(struct vector **v, size_t index, void *get)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -126,19 +126,19 @@ int vec_get(vector **v, size_t index, void *get)
 }
 
 // returns iterator to the first element
-void *vec_begin(vector *v)
+void *vec_begin(struct vector *v)
 {
     return v->data;
 }
 
 // returns iterator to the end of last element
-void *vec_end(vector *v)
+void *vec_end(struct vector *v)
 {
     return v->data + v->len * v->bs;
 }
 
-// frees vector
-int vec_delete(vector **v)
+// frees struct vector
+int vec_delete(struct vector **v)
 {
     free(*v);
     *v = NULL;
@@ -153,9 +153,9 @@ const char *vec_error(int state)
     if(state == VEC_SUCCESS) {
         return strdup("Success");
     } else if(state == VEC_MALLOC) {
-        return strdup("Failed to malloc vector!");
+        return strdup("Failed to malloc struct vector!");
     } else if(state == VEC_REALLOC) {
-        return strdup("Failed to realloc vector!");
+        return strdup("Failed to realloc struct vector!");
     } else if(state == VEC_INDEX) {
         return strdup("Index out of bounds!");
     } else {
