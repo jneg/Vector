@@ -12,7 +12,7 @@
 // where "it" is a pointer to the correct type
 
 // allocates more memory if necessary
-static int vec_alloc(struct vector **v)
+static int vec_alloc(struct vector **const v)
 {
     if((*v)->cap < 16 || (*v)->cap == (*v)->len) {
         if((*v)->cap < 16)
@@ -29,7 +29,7 @@ static int vec_alloc(struct vector **v)
 }
 
 // mallocs struct vector and sets default values
-int vec_new(struct vector **v, size_t bs)
+int vec_new(struct vector **const v, size_t bs)
 {
     *v = malloc(sizeof **v);
     if(!*v)
@@ -42,7 +42,7 @@ int vec_new(struct vector **v, size_t bs)
 }
 
 // adds element to end and allocates memory if necessary
-int vec_push(struct vector **v, void *data)
+int vec_push(struct vector **const v, void *data)
 {
     if(vec_alloc(v) == VEC_REALLOC)
         return VEC_REALLOC;
@@ -53,7 +53,7 @@ int vec_push(struct vector **v, void *data)
 }
 
 // removes last element
-int vec_pop(struct vector **v)
+int vec_pop(struct vector **const v)
 {
     if((*v)->len == 0)
         return VEC_INDEX;
@@ -64,7 +64,7 @@ int vec_pop(struct vector **v)
 }
 
 // overwrites element at index with data
-int vec_replace(struct vector **v, size_t index, void *data)
+int vec_replace(struct vector **const v, size_t index, void *data)
 { 
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -75,7 +75,7 @@ int vec_replace(struct vector **v, size_t index, void *data)
 }
 
 // shifts right elements and overwrites element at index
-int vec_insert(struct vector **v, size_t index, void *data)
+int vec_insert(struct vector **const v, size_t index, void *data)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -90,7 +90,7 @@ int vec_insert(struct vector **v, size_t index, void *data)
 }
 
 // removes element by shifting right elements on top of it
-int vec_remove(struct vector **v, size_t index)
+int vec_remove(struct vector **const v, size_t index)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -101,7 +101,7 @@ int vec_remove(struct vector **v, size_t index)
 }
 
 // deallocates memory until new length
-int vec_shrink(struct vector **v, size_t newlen)
+int vec_shrink(struct vector **const v, size_t newlen)
 {
     if(newlen >= (*v)->len)
         return VEC_INDEX;
@@ -115,7 +115,7 @@ int vec_shrink(struct vector **v, size_t newlen)
 }
 
 // copies element at index into get
-int vec_get(struct vector **v, size_t index, void *get)
+int vec_get(struct vector **const v, size_t index, void *const get)
 {
     if(index >= (*v)->len)
         return VEC_INDEX;
@@ -126,19 +126,19 @@ int vec_get(struct vector **v, size_t index, void *get)
 }
 
 // returns iterator to the first element
-void *vec_begin(struct vector *v)
+void *vec_begin(struct vector *const v)
 {
     return v->data;
 }
 
 // returns iterator to the end of last element
-void *vec_end(struct vector *v)
+void *vec_end(struct vector *const v)
 {
     return v->data + v->len * v->bs;
 }
 
 // frees struct vector
-int vec_delete(struct vector **v)
+int vec_delete(struct vector **const v)
 {
     free(*v);
     *v = NULL;
