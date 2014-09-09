@@ -100,7 +100,7 @@ int vec_remove(struct vector **const v, size_t index)
     return VEC_SUCCESS;
 }
 
-// deallocates memory until new length
+// reallocates memory to new length
 int vec_shrink(struct vector **const v, size_t newlen)
 {
     if(newlen >= (*v)->len)
@@ -147,7 +147,6 @@ int vec_delete(struct vector **const v)
 }
 
 // returns a string of the error code
-// enjoy your memory leaks
 const char *vec_error(int state)
 {
     if(state == VEC_SUCCESS) {
