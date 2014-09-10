@@ -29,13 +29,14 @@ static int vec_alloc(struct vector **const v)
 }
 
 // mallocs struct vector and sets default values
-int vec_new(struct vector **const v, size_t bs)
+int vec_new(struct vector **const v, size_t size, size_t bs)
 {
-    *v = malloc(sizeof **v);
+    *v = malloc(sizeof **v + size*bs);
     if(!*v)
         return VEC_MALLOC;
 
-    (*v)->len = (*v)->cap = 0;
+    (*v)->len = 0;
+    (*v)->cap = size;
     (*v)->bs = bs;
 
     return VEC_SUCCESS;
@@ -126,13 +127,13 @@ int vec_get(struct vector **const v, size_t index, void *const get)
 }
 
 // returns iterator to the first element
-void *vec_begin(struct vector *const v)
+inline void *vec_begin(struct vector *const v)
 {
     return v->data;
 }
 
 // returns iterator to the end of last element
-void *vec_end(struct vector *const v)
+inline void *vec_end(struct vector *const v)
 {
     return v->data + v->len * v->bs;
 }
