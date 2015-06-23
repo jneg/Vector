@@ -4,13 +4,19 @@
 
 #include "Vector.h"
 
-/*
- * I do not check for pointer validity.
+#define CAP_MIN 8
 
- * Iterate through the whole struct vector using
- * for (itr = vec_begin(v); itr != vec_end(v); ++itr)
- * where "itr" is a pointer to the correct type.
-*/
+struct Vector {
+   size_t cap, len, bs;
+   char *data;
+};
+
+// I do not check for pointer validity.
+
+// Iterate through the whole struct vector using
+// for (itr = VecBegin(v); itr != VecEnd(v); ++itr)
+// where "itr" is a pointer to the correct type.
+
 
 // Sets the capacity of Vector |v| to the minimum capacity if it is 
 // lower than the minimum capacity. Otherwise, doubles the capacity of Vector
@@ -71,7 +77,7 @@ int VecPop(Vector *v) {
 
 // Overwrites element at |index| in Vector |v| with |data|.
 int VecReplace(Vector *v, size_t index, void *data) { 
-   if (v->len <= index) {
+   if (index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
@@ -83,7 +89,7 @@ int VecReplace(Vector *v, size_t index, void *data) {
 // Shifts right elements and overwrites element at |index| in Vector |v| with
 // |data|.
 int VecInsert(Vector *v, size_t index, void *data) {
-   if (v->len <= index || VecResize(v)) {
+   if (index >= v->len || index < 0 || VecResize(v)) {
       return EXIT_FAILURE;
    }
 
@@ -94,9 +100,10 @@ int VecInsert(Vector *v, size_t index, void *data) {
    return EXIT_SUCCESS;
 }
 
-// Removes element at |index| in Vector |v| by shifting right elements on top of it.
+// Removes element at |index| in Vector |v| by shifting right elements on top
+// of it.
 int VecRemove(Vector *v, size_t index) {
-   if (v->len <= index) {
+   if (index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
@@ -108,7 +115,7 @@ int VecRemove(Vector *v, size_t index) {
 
 // Copies element at |index| in Vector |v| into |get|.
 int VecGet(Vector *v, size_t index, void *get) {
-   if (v->len <= index) {
+   if (index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
@@ -116,6 +123,7 @@ int VecGet(Vector *v, size_t index, void *get) {
     
    return EXIT_SUCCESS;
 }
+
 
 // Returns an iterator to the first element in Vector |v|.
 void *VecBegin(Vector *v)
@@ -129,10 +137,23 @@ void *VecEnd(Vector *v)
    return v->data + v->len * v->bs;
 }
 
+// Returns true if the Vector |v| has no elements, otherwise false.
+int VecIsEmpty(Vector *v) {
+   return !v->len;
+}
+
+// Sets the capacity and length of Vector |v| to 0 and frees the data.
+int VecClear(Vector *v) {
+   v->cap = v->len = 0;
+   free(v->data);
+
+   return EXIT_SUCCESS;
+}
+
 // Frees Vector |v|.
 int VecDelete(Vector *v)
 {
-   free(v->data);
+   VecClear(v);
    free(v);
     
    return EXIT_SUCCESS;

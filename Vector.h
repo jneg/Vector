@@ -1,47 +1,43 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <stddef.h>
+typedef struct Vector Vector;
 
-#define CAP_MIN 8
-
-typedef struct Vector
-{
-    size_t cap, len, bs;
-    char *data;
-} Vector;
-
-// Mallocs a Vector |v| and sets default values
+// Allocates Vector |v| with bytes per element |bs|.
 int VecNew(Vector **v, size_t bs);
 
-// Adds element to end of |v| and allocates memory if necessary
+// Adds element to end of Vector |v|.
 int VecPush(Vector *v, void *data);
 
-// Removes last element
+// Removes last element in Vector |v|.
 int VecPop(Vector *v);
 
-// Overwrites element at index with data
+// Overwrites element at |index| with |data| in Vector |v|.
 int VecReplace(Vector *v, size_t index, void *data);
 
-// Shifts right elements and overwrites element at index
+// Shifts right elements then overwrites element at |index| with |data| in
+// Vector |v|.
 int VecInsert(Vector *v, size_t index, void *data);
 
-// Removes element by shifting right elements on top of it
+// Removes element at |index| in Vector |v|.
 int VecRemove(Vector *v, size_t index);
 
-// Reallocates memory to new length
-int VecShrink(Vector *v, size_t newlen);
-
-// Copies element at index into get
+// Copies |get| into Vector |v| at |index|.
 int VecGet(Vector *v, size_t index, void *get);
 
-// Returns iterator to the first element
+// Returns an iterator to the first element of Vector |v|.
 void *VecBegin(Vector *v);
 
-// Returns iterator to the last element
+// Returns an iterator to the last element of Vector |v|.
 void *VecEnd(Vector *v);
 
-// Frees struct vector
+// Returns true if the Vector |v| is empty.
+int VecIsEmpty(Vector *v);
+
+// Removes all elements in Vector |v|.
+int VecClear(Vector *v);
+
+// Clears and frees Vector |v|.
 int VecDelete(Vector *v);
 
 #endif
