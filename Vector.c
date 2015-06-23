@@ -124,22 +124,14 @@ int VecGet(Vector *v, size_t index, void *get) {
    return EXIT_SUCCESS;
 }
 
-
-// Returns an iterator to the first element in Vector |v|.
-void *VecBegin(Vector *v)
-{
-   return v->data;
+// Returns the number of elements in Vector |v|.
+int VecSize(Vector *v) {
+   return v->len;
 }
 
-// Returns an iterator to the end of last element in Vector |v|.
-void *VecEnd(Vector *v)
-{
-   return v->data + v->len * v->bs;
-}
-
-// Returns true if the Vector |v| has no elements, otherwise false.
-int VecIsEmpty(Vector *v) {
-   return !v->len;
+// Returns the element size in Vector |v|.
+int VecElemSize(Vector *v) {
+   return v->bs;
 }
 
 // Sets the capacity and length of Vector |v| to 0 and frees the data.
@@ -157,4 +149,16 @@ int VecDelete(Vector *v)
    free(v);
     
    return EXIT_SUCCESS;
+}
+
+// Returns an iterator to the first element in Vector |v|.
+void *VecBegin(Vector *v)
+{
+   return v->data;
+}
+
+// Returns an iterator to the end of last element in Vector |v|.
+void *VecEnd(Vector *v)
+{
+   return v->data + v->len * v->bs;
 }

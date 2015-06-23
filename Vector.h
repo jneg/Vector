@@ -31,8 +31,11 @@ void *VecBegin(Vector *v);
 // Returns an iterator to the last element of Vector |v|.
 void *VecEnd(Vector *v);
 
-// Returns true if the Vector |v| is empty.
-int VecIsEmpty(Vector *v);
+// Returns the number of elements in Vector |v|.
+int VecSize(Vector *v);
+
+// Returns the element size in Vector |v|.
+int VecElemSize(Vector *v);
 
 // Removes all elements in Vector |v|.
 int VecClear(Vector *v);
