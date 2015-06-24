@@ -153,10 +153,11 @@ int VecClear(Vector *v) {
 }
 
 // Frees Vector |v|.
-int VecDelete(Vector *v)
+int VecDelete(Vector **v)
 {
-   VecClear(v);
-   free(v);
+   VecClear(*v);
+   free(*v);
+   *v = NULL;
     
    return EXIT_SUCCESS;
 }

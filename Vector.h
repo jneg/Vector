@@ -38,7 +38,7 @@ int VecCapacity(Vector *v);
 int VecClear(Vector *v);
 
 // Clears and frees Vector |v|.
-int VecDelete(Vector *v);
+int VecDelete(Vector **v);
 
 // Returns an iterator to the first element of Vector |v|.
 void *VecBegin(Vector *v);
