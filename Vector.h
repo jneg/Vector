@@ -25,22 +25,25 @@ int VecRemove(Vector *v, size_t index);
 // Copies |get| into Vector |v| at |index|.
 int VecGet(Vector *v, size_t index, void *get);
 
-// Returns an iterator to the first element of Vector |v|.
-void *VecBegin(Vector *v);
-
-// Returns an iterator to the last element of Vector |v|.
-void *VecEnd(Vector *v);
-
-// Returns the number of elements in Vector |v|.
+// Returns the number of elements of Vector |v|.
 int VecSize(Vector *v);
 
-// Returns the element size in Vector |v|.
+// Returns the element size of Vector |v|.
 int VecElemSize(Vector *v);
+
+// Returns the memory capacity of Vector |v|.
+int VecCapacity(Vector *v);
 
 // Removes all elements in Vector |v|.
 int VecClear(Vector *v);
 
 // Clears and frees Vector |v|.
 int VecDelete(Vector *v);
+
+// Returns an iterator to the first element of Vector |v|.
+void *VecBegin(Vector *v);
+
+// Returns an iterator to the last element of Vector |v|.
+void *VecEnd(Vector *v);
 
 #endif
