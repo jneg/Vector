@@ -11,8 +11,6 @@ struct Vector {
    char *data;
 };
 
-// I do not check for pointer parameter validity.
-
 // Iterate through the whole struct vector using
 // for (itr = VecBegin(v); itr != VecEnd(v); ++itr)
 // where "itr" is a pointer to the correct type.
@@ -46,6 +44,10 @@ static int VecResize(Vector *v) {
 
 // Allocates Vector |v| with bytes per element |bs|.
 int VecNew(Vector **v, size_t bs) {
+   if (!v) {
+      return EXIT_FAILURE;
+   }
+
    *v = calloc(1, sizeof(Vector));
    if (!*v) {
       return EXIT_FAILURE;
@@ -59,7 +61,7 @@ int VecNew(Vector **v, size_t bs) {
 
 // Adds |data| to the end of |v|.
 int VecPush(Vector *v, void *data) {
-   if (VecResize(v)) {
+   if (!v || !data || VecResize(v)) {
       return EXIT_FAILURE;
    }
 
@@ -70,7 +72,7 @@ int VecPush(Vector *v, void *data) {
 
 // Removes the last element from |v|.
 int VecPop(Vector *v) {
-   if (v->len == 0) {
+   if (!v || v->len == 0) {
       return EXIT_FAILURE;
    }
 
@@ -81,7 +83,7 @@ int VecPop(Vector *v) {
 
 // Overwrites element at |index| in Vector |v| with |data|.
 int VecReplace(Vector *v, size_t index, void *data) { 
-   if (index >= v->len || index < 0) {
+   if (!v || !data || index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
@@ -93,7 +95,7 @@ int VecReplace(Vector *v, size_t index, void *data) {
 // Shifts right elements and overwrites element at |index| in Vector |v| with
 // |data|.
 int VecInsert(Vector *v, size_t index, void *data) {
-   if (index > v->len || index < 0 || VecResize(v)) {
+   if (!v || !data || index > v->len || index < 0 || VecResize(v)) {
       return EXIT_FAILURE;
    }
 
@@ -107,7 +109,7 @@ int VecInsert(Vector *v, size_t index, void *data) {
 // Removes element at |index| in Vector |v| by shifting right elements on top
 // of it.
 int VecRemove(Vector *v, size_t index) {
-   if (index >= v->len || index < 0) {
+   if (!v || index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
@@ -119,11 +121,37 @@ int VecRemove(Vector *v, size_t index) {
 
 // Copies element at |index| in Vector |v| into |get|.
 int VecGet(Vector *v, size_t index, void *get) {
-   if (index >= v->len || index < 0) {
+   if (!v || !get || index >= v->len || index < 0) {
       return EXIT_FAILURE;
    }
 
    memmove(get, v->data + index * v->bs, v->bs);
+    
+   return EXIT_SUCCESS;
+}
+
+// Sets the capacity and length of Vector |v| to 0 and frees the data.
+int VecClear(Vector *v) {
+   if (!v) {
+      return EXIT_FAILURE;
+   }
+
+   v->cap = v->len = 0;
+   free(v->data);
+   v->data = NULL;
+
+   return EXIT_SUCCESS;
+}
+
+// Frees Vector |v|.
+int VecDelete(Vector **v)
+{
+   if (!v || VecClear(*v)) {
+      return EXIT_FAILURE;
+   }
+
+   free(*v);
+   *v = NULL;
     
    return EXIT_SUCCESS;
 }
@@ -141,25 +169,6 @@ int VecElemSize(Vector *v) {
 // Returns the memory capacity of Vector |v|.
 int VecCapacity(Vector *v) {
    return v->cap;
-}
-
-// Sets the capacity and length of Vector |v| to 0 and frees the data.
-int VecClear(Vector *v) {
-   v->cap = v->len = 0;
-   free(v->data);
-   v->data = NULL;
-
-   return EXIT_SUCCESS;
-}
-
-// Frees Vector |v|.
-int VecDelete(Vector **v)
-{
-   VecClear(*v);
-   free(*v);
-   *v = NULL;
-    
-   return EXIT_SUCCESS;
 }
 
 // Returns an iterator to the first element in Vector |v|.
